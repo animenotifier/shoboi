@@ -9,7 +9,7 @@ import (
 )
 
 func TestEpisodes(t *testing.T) {
-	anime, err := GetAnime("4528")
+	anime, err := GetAnime("4515")
 
 	assert.Nil(t, err)
 

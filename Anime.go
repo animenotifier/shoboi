@@ -10,7 +10,7 @@ import (
 	"github.com/parnurzeal/gorequest"
 )
 
-var episodeNameRegex = regexp.MustCompile(`\*\d{1,3}\*(.*)`)
+var episodeNameRegex = regexp.MustCompile(`\*(\d{1,3})\*(.*)`)
 
 // Anime ...
 type Anime struct {
@@ -63,14 +63,16 @@ func (anime *Anime) Episodes() []*Episode {
 	episodes := []*Episode{}
 
 	episodeNames := strings.Split(anime.SubTitles, "\r\n")
-	for i, episode := range episodeNames {
+	for _, episode := range episodeNames {
 		episode = strings.TrimSpace(episode)
 		matches := episodeNameRegex.FindStringSubmatch(episode)
 
-		if len(matches) > 1 {
+		if len(matches) > 2 {
+			episodeNumber, _ := strconv.Atoi(matches[1])
+
 			episodes = append(episodes, &Episode{
-				Number:        i + 1,
-				TitleJapanese: matches[1],
+				Number:        episodeNumber,
+				TitleJapanese: matches[2],
 				anime:         anime,
 			})
 		}
