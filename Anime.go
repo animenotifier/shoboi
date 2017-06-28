@@ -29,19 +29,25 @@ type Anime struct {
 	UserPointRank string `xml:"UserPointRank" json:"UserPointRank"`
 }
 
-// EpisodeNames ...
-func (anime *Anime) EpisodeNames() []string {
+// Episodes ...
+func (anime *Anime) Episodes() []*Episode {
 	if anime.SubTitles == "" {
 		return nil
 	}
 
-	episodes := strings.Split(anime.SubTitles, "\n")
-	for i, episode := range episodes {
+	episodes := []*Episode{}
+
+	episodeNames := strings.Split(anime.SubTitles, "\r\n")
+	for i, episode := range episodeNames {
 		episode = strings.TrimSpace(episode)
 		matches := episodeNameRegex.FindStringSubmatch(episode)
 
 		if len(matches) > 1 {
-			episodes[i] = matches[1]
+			episodes = append(episodes, &Episode{
+				Number:        i + 1,
+				TitleJapanese: matches[1],
+				anime:         anime,
+			})
 		}
 	}
 

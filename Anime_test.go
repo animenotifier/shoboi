@@ -1,7 +1,6 @@
 package shoboi
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"testing"
@@ -11,25 +10,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAnime(t *testing.T) {
+func TestEpisodes(t *testing.T) {
 	tid := "4528"
-	resp, body, errs := gorequest.New().Get("http://cal.syoboi.jp/json.php?Req=TitleFull&TID=" + tid).EndBytes()
-
-	if len(errs) > 0 {
-		panic(errs[0])
-	}
-
-	assert.Equal(t, resp.StatusCode, http.StatusOK)
 
 	titleFull := &TitleFull{}
-	json.Unmarshal(body, titleFull)
+	resp, _, errs := gorequest.New().Get("http://cal.syoboi.jp/json.php?Req=TitleFull&TID=" + tid).EndStruct(titleFull)
+
+	assert.Empty(t, errs)
+	assert.Equal(t, resp.StatusCode, http.StatusOK)
 
 	assert.NotNil(t, titleFull)
 	assert.NotNil(t, titleFull.Titles)
 	assert.NotNil(t, titleFull.Titles[tid])
 
 	anime := titleFull.Titles[tid]
-	for i, episode := range anime.EpisodeNames() {
-		fmt.Printf("Episode %d: %s\n", i+1, color.GreenString(episode))
+	for _, episode := range anime.Episodes() {
+		fmt.Printf("Episode %d: %s\n", episode.Number, color.GreenString(episode.TitleJapanese))
+		fmt.Println(episode.AiringDate())
+		return
 	}
+
+	// for _, comment := range strings.Split(anime.Comment, "\r\n") {
+	// 	fmt.Println(comment)
+	// }
 }
