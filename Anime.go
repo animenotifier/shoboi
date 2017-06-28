@@ -1,8 +1,13 @@
 package shoboi
 
 import (
+	"errors"
+	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
+
+	"github.com/parnurzeal/gorequest"
 )
 
 var episodeNameRegex = regexp.MustCompile(`\*\d{1,3}\*(.*)`)
@@ -27,6 +32,26 @@ type Anime struct {
 	UpdatedAt     string `xml:"LastUpdate" json:"LastUpdate"`
 	UserPoint     string `xml:"UserPoint" json:"UserPoint"`
 	UserPointRank string `xml:"UserPointRank" json:"UserPointRank"`
+}
+
+// GetAnime ...
+func GetAnime(tid string) (*Anime, error) {
+	titleFull := &TitleFull{}
+	resp, _, errs := gorequest.New().Get("http://cal.syoboi.jp/json.php?Req=TitleFull&TID=" + tid).EndStruct(titleFull)
+
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, errors.New("Invalid status code: " + strconv.Itoa(resp.StatusCode))
+	}
+
+	if titleFull == nil || titleFull.Titles == nil || titleFull.Titles[tid] == nil {
+		return nil, errors.New("Invalid data: Titles is nil")
+	}
+
+	return titleFull.Titles[tid], nil
 }
 
 // Episodes ...
