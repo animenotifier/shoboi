@@ -25,10 +25,10 @@ type Anime struct {
 	Keywords      string `xml:"Keywords" json:"Keywords"`
 	ShortTitle    string `xml:"ShortTitle" json:"ShortTitle"`
 	SubTitles     string `xml:"SubTitles" json:"SubTitles"`
-	Title         string `xml:"Title" json:"Title"`
+	TitleJapanese string `xml:"Title" json:"Title"`
 	TitleEnglish  string `xml:"TitleEN" json:"TitleEN"`
+	TitleHiragana string `xml:"TitleYomi" json:"TitleYomi"`
 	TitleFlag     string `xml:"TitleFlag" json:"TitleFlag"`
-	TitleYomi     string `xml:"TitleYomi" json:"TitleYomi"`
 	UpdatedAt     string `xml:"LastUpdate" json:"LastUpdate"`
 	UserPoint     string `xml:"UserPoint" json:"UserPoint"`
 	UserPointRank string `xml:"UserPointRank" json:"UserPointRank"`
