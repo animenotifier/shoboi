@@ -45,28 +45,28 @@ type AnimeSearchResult struct {
 }
 
 // SearchAnime ...
-func SearchAnime(title string) (tid string, err error) {
+func SearchAnime(title string) (anime *AnimeSearchResult, err error) {
 	title = strings.ToLower(title)
 	searchResult := &SearchResult{}
 	resp, _, errs := gorequest.New().Get("http://cal.syoboi.jp/json?Req=TitleSearch&Search=" + title + "&Limit=15").EndStruct(searchResult)
 
 	if len(errs) > 0 {
-		return "", errs[0]
+		return nil, errs[0]
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return "", errors.New("Invalid status code: " + strconv.Itoa(resp.StatusCode))
+		return nil, errors.New("Invalid status code: " + strconv.Itoa(resp.StatusCode))
 	}
 
 	if searchResult == nil || searchResult.Titles == nil {
-		return "", errors.New("Invalid data: Titles is nil")
+		return nil, nil
 	}
 
 	for _, anime := range searchResult.Titles {
 		if strings.ToLower(anime.TitleJapanese) == title || strings.ToLower(anime.TitleEnglish) == title {
-			return anime.TID, nil
+			return anime, nil
 		}
 	}
 
-	return "", nil
+	return nil, nil
 }
