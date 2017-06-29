@@ -22,7 +22,7 @@ type AnimeSearchResult struct {
 	TitleHiragana string `json:"TitleYomi"`
 	TitleEnglish  string `json:"TitleEN"`
 	Cat           string `json:"Cat"`
-	FirstCh       string `json:"FirstCh"`
+	FirstChannel  string `json:"FirstCh"`
 	FirstYear     string `json:"FirstYear"`
 	FirstMonth    string `json:"FirstMonth"`
 	FirstEndYear  string `json:"FirstEndYear"`
