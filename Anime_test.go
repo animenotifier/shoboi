@@ -14,7 +14,14 @@ func TestEpisodes(t *testing.T) {
 	assert.Nil(t, err)
 
 	for _, episode := range anime.Episodes() {
+		assert.NotEmpty(t, episode.TitleJapanese)
+
 		fmt.Printf("Episode %d: %s\n", episode.Number, color.GreenString(episode.TitleJapanese))
-		fmt.Println(episode.AiringDate())
+
+		airingDate := episode.AiringDate()
+		fmt.Println(airingDate)
+
+		assert.NotEmpty(t, airingDate.Start)
+		assert.NotEmpty(t, airingDate.End)
 	}
 }
