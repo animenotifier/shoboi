@@ -25,3 +25,10 @@ func TestEpisodes(t *testing.T) {
 		assert.NotEmpty(t, airingDate.End)
 	}
 }
+
+func TestNonExistingAnime(t *testing.T) {
+	anime, err := GetAnime("999999999999")
+
+	assert.Nil(t, anime)
+	assert.Error(t, err)
+}
