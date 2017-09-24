@@ -9,7 +9,7 @@ import (
 )
 
 func TestEpisodes(t *testing.T) {
-	anime, err := GetAnime("4515")
+	anime, err := GetAnime("1536")
 
 	assert.Nil(t, err)
 
@@ -19,7 +19,10 @@ func TestEpisodes(t *testing.T) {
 		fmt.Printf("Episode %d: %s\n", episode.Number, color.GreenString(episode.TitleJapanese))
 
 		airingDate := episode.AiringDate()
-		fmt.Println(airingDate)
+
+		println(airingDate.Start)
+		println(airingDate.End)
+		println()
 
 		assert.NotEmpty(t, airingDate.Start)
 		assert.NotEmpty(t, airingDate.End)

@@ -10,7 +10,7 @@ import (
 	"github.com/parnurzeal/gorequest"
 )
 
-var episodeNameRegex = regexp.MustCompile(`\*(\d{1,3})\*(.*)`)
+var episodeNameRegex = regexp.MustCompile(`\*(\d+)\*(.*)`)
 
 // Anime ...
 type Anime struct {
