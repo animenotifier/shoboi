@@ -67,12 +67,12 @@ func GetAnime(tid string) (*Anime, error) {
 		tryDelay *= 2
 	}
 
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New("Invalid status code: " + strconv.Itoa(resp.StatusCode))
+	}
+
+	if len(errs) > 0 {
+		return nil, errs[0]
 	}
 
 	if titleFull == nil || titleFull.Titles == nil || titleFull.Titles[tid] == nil {
