@@ -6,7 +6,9 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/fatih/color"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -36,8 +38,34 @@ type Anime struct {
 
 // GetAnime ...
 func GetAnime(tid string) (*Anime, error) {
+	const maxTries = 5
+	tryCount := 0
 	titleFull := &TitleFull{}
-	resp, _, errs := gorequest.New().Get("http://cal.syoboi.jp/json.php?Req=TitleFull&TID=" + tid).EndStruct(titleFull)
+	tryDelay := 10 * time.Second
+
+	var resp gorequest.Response
+	var errs []error
+
+	for {
+		resp, _, errs = gorequest.New().Get("http://cal.syoboi.jp/json.php?Req=TitleFull&TID=" + tid).EndStruct(titleFull)
+
+		if resp.StatusCode == http.StatusOK {
+			break
+		}
+
+		tryCount++
+
+		color.Red("Shoboi status code %d (#%d)", resp.StatusCode, tryCount)
+
+		if tryCount > maxTries {
+			break
+		}
+
+		time.Sleep(tryDelay)
+
+		// Exponential falloff
+		tryDelay *= 2
+	}
 
 	if len(errs) > 0 {
 		return nil, errs[0]
