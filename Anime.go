@@ -61,6 +61,39 @@ func GetAnime(tid string) (*Anime, error) {
 
 // Episodes ...
 func (anime *Anime) Episodes() []*Episode {
+	episodes := anime.NamedEpisodes()
+	episodeNumber := 1
+	index := 0
+
+	if len(episodes) > 0 {
+		episodeNumber = episodes[0].Number
+	}
+
+	for {
+		airingDate := GetAiringDate(anime.ID, episodeNumber)
+
+		if index >= len(episodes) {
+			if airingDate == nil {
+				break
+			}
+
+			episodes = append(episodes, &Episode{
+				anime:  anime,
+				Number: episodeNumber,
+			})
+		}
+
+		episodes[index].AiringDate = airingDate
+
+		episodeNumber++
+		index++
+	}
+
+	return episodes
+}
+
+// NamedEpisodes ...
+func (anime *Anime) NamedEpisodes() []*Episode {
 	if anime.SubTitles == "" {
 		return nil
 	}
