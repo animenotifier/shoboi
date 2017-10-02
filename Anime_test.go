@@ -1,10 +1,9 @@
 package shoboi
 
 import (
-	"fmt"
+	"strings"
 	"testing"
 
-	"github.com/fatih/color"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,18 +13,15 @@ func TestEpisodes(t *testing.T) {
 	assert.Nil(t, err)
 
 	for _, episode := range anime.Episodes() {
+		assert.NotZero(t, episode.Number)
 		assert.NotEmpty(t, episode.TitleJapanese)
-
-		fmt.Printf("Episode %d: %s\n", episode.Number, color.GreenString(episode.TitleJapanese))
 
 		airingDate := episode.AiringDate()
 
-		println(airingDate.Start)
-		println(airingDate.End)
-		println()
-
 		assert.NotEmpty(t, airingDate.Start)
+		assert.True(t, strings.HasPrefix(airingDate.Start, "2008") || strings.HasPrefix(airingDate.Start, "2009") || strings.HasPrefix(airingDate.Start, "2010"))
 		assert.NotEmpty(t, airingDate.End)
+		assert.True(t, strings.HasPrefix(airingDate.End, "2008") || strings.HasPrefix(airingDate.End, "2009") || strings.HasPrefix(airingDate.End, "2010"))
 	}
 }
 
