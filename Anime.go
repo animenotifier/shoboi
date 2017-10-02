@@ -1,15 +1,12 @@
 package shoboi
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
-
-	"github.com/fatih/color"
-	"github.com/parnurzeal/gorequest"
 )
 
 var episodeNameRegex = regexp.MustCompile(`\*(\d+)\*(.*)`)
@@ -38,34 +35,8 @@ type Anime struct {
 
 // GetAnime ...
 func GetAnime(tid string) (*Anime, error) {
-	const maxTries = 5
-	tryCount := 0
 	titleFull := &TitleFull{}
-	tryDelay := 10 * time.Second
-
-	var resp gorequest.Response
-	var errs []error
-
-	for {
-		resp, _, errs = gorequest.New().Get("http://cal.syoboi.jp/json.php?Req=TitleFull&TID=" + tid).EndStruct(titleFull)
-
-		if resp.StatusCode == http.StatusOK {
-			break
-		}
-
-		tryCount++
-
-		color.Red("Shoboi status code %d (#%d)", resp.StatusCode, tryCount)
-
-		if tryCount > maxTries {
-			break
-		}
-
-		time.Sleep(tryDelay)
-
-		// Exponential falloff
-		tryDelay *= 2
-	}
+	resp, body, errs := get("http://cal.syoboi.jp/json.php?Req=TitleFull&TID=" + tid)
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New("Invalid status code: " + strconv.Itoa(resp.StatusCode))
@@ -73,6 +44,12 @@ func GetAnime(tid string) (*Anime, error) {
 
 	if len(errs) > 0 {
 		return nil, errs[0]
+	}
+
+	err := json.Unmarshal(body, titleFull)
+
+	if err != nil {
+		return nil, err
 	}
 
 	if titleFull == nil || titleFull.Titles == nil || titleFull.Titles[tid] == nil {

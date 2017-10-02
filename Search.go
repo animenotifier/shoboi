@@ -1,12 +1,11 @@
 package shoboi
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
 	"strings"
-
-	"github.com/parnurzeal/gorequest"
 )
 
 // SearchResult ...
@@ -48,7 +47,7 @@ type AnimeSearchResult struct {
 func SearchAnime(title string) (anime *AnimeSearchResult, err error) {
 	title = strings.ToLower(title)
 	searchResult := &SearchResult{}
-	resp, _, errs := gorequest.New().Get("http://cal.syoboi.jp/json?Req=TitleSearch&Search=" + title + "&Limit=15").EndStruct(searchResult)
+	resp, body, errs := get("http://cal.syoboi.jp/json?Req=TitleSearch&Search=" + title + "&Limit=15")
 
 	if len(errs) > 0 {
 		return nil, errs[0]
@@ -56,6 +55,12 @@ func SearchAnime(title string) (anime *AnimeSearchResult, err error) {
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New("Invalid status code: " + strconv.Itoa(resp.StatusCode))
+	}
+
+	err = json.Unmarshal(body, searchResult)
+
+	if err != nil {
+		return nil, err
 	}
 
 	if searchResult == nil || searchResult.Titles == nil {
