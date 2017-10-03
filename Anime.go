@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -88,6 +89,10 @@ func (anime *Anime) Episodes() []*Episode {
 		episodeNumber++
 		index++
 	}
+
+	sort.Slice(episodes, func(i, j int) bool {
+		return episodes[i].Number < episodes[j].Number
+	})
 
 	return episodes
 }
