@@ -9,10 +9,10 @@ import (
 )
 
 func get(url string) (resp gorequest.Response, body []byte, errs []error) {
-	const maxTries = 5
+	const maxTries = 10
 
 	tryCount := 0
-	tryDelay := 10 * time.Second
+	tryDelay := 5 * time.Second
 
 	for {
 		resp, body, errs = gorequest.New().Get(url).EndBytes()
@@ -23,7 +23,7 @@ func get(url string) (resp gorequest.Response, body []byte, errs []error) {
 
 		tryCount++
 
-		color.Red("Shoboi status code %d (#%d)", resp.StatusCode, tryCount)
+		color.Red("Status code %d | Try #%d | %s", resp.StatusCode, tryCount, url)
 
 		if tryCount > maxTries {
 			break
@@ -32,7 +32,7 @@ func get(url string) (resp gorequest.Response, body []byte, errs []error) {
 		time.Sleep(tryDelay)
 
 		// Exponential falloff
-		tryDelay *= 2
+		tryDelay += tryDelay / 2
 	}
 
 	return resp, body, errs
