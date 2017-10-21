@@ -37,17 +37,17 @@ type Anime struct {
 // GetAnime ...
 func GetAnime(tid string) (*Anime, error) {
 	titleFull := &TitleFull{}
-	resp, body, errs := get("http://cal.syoboi.jp/json.php?Req=TitleFull&TID=" + tid)
+	resp, err := get("http://cal.syoboi.jp/json.php?Req=TitleFull&TID=" + tid)
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("Invalid status code: " + strconv.Itoa(resp.StatusCode))
+	if resp.StatusCode() != http.StatusOK {
+		return nil, errors.New("Invalid status code: " + strconv.Itoa(resp.StatusCode()))
 	}
 
-	if len(errs) > 0 {
-		return nil, errs[0]
+	if err != nil {
+		return nil, err
 	}
 
-	err := json.Unmarshal(body, titleFull)
+	err = json.Unmarshal(resp.BodyBytes(), titleFull)
 
 	if err != nil {
 		return nil, err

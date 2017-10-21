@@ -19,17 +19,17 @@ type AiringDate struct {
 // GetAiringDate ...
 func GetAiringDate(animeID string, episodeNumber int) *AiringDate {
 	programList := &ProgramList{}
-	resp, body, errs := get("http://cal.syoboi.jp/json.php?Req=ProgramByCount&TID=" + animeID + "&Count=" + strconv.Itoa(episodeNumber))
+	resp, err := get("http://cal.syoboi.jp/json.php?Req=ProgramByCount&TID=" + animeID + "&Count=" + strconv.Itoa(episodeNumber))
 
-	if len(errs) > 0 {
+	if err != nil {
 		return nil
 	}
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode() != http.StatusOK {
 		return nil
 	}
 
-	err := json.Unmarshal(body, programList)
+	err = json.Unmarshal(resp.BodyBytes(), programList)
 
 	if err != nil {
 		return nil

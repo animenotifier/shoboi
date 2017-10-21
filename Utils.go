@@ -4,20 +4,20 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/aerogo/http/client"
 	"github.com/fatih/color"
-	"github.com/parnurzeal/gorequest"
 )
 
-func get(url string) (resp gorequest.Response, body []byte, errs []error) {
+func get(url string) (resp client.Response, err error) {
 	const maxTries = 10
 
 	tryCount := 0
 	tryDelay := 5 * time.Second
 
 	for {
-		resp, body, errs = gorequest.New().Get(url).EndBytes()
+		resp, err = client.Get(url).End()
 
-		if resp.StatusCode == http.StatusOK {
+		if resp.StatusCode() == http.StatusOK {
 			break
 		}
 
@@ -35,5 +35,5 @@ func get(url string) (resp gorequest.Response, body []byte, errs []error) {
 		tryDelay += tryDelay / 2
 	}
 
-	return resp, body, errs
+	return resp, err
 }
