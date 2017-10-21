@@ -1,7 +1,6 @@
 package shoboi
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 	"regexp"
@@ -47,7 +46,7 @@ func GetAnime(tid string) (*Anime, error) {
 		return nil, err
 	}
 
-	err = json.Unmarshal(resp.BodyBytes(), titleFull)
+	err = resp.Unmarshal(titleFull)
 
 	if err != nil {
 		return nil, err

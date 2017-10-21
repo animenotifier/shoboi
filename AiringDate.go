@@ -1,7 +1,6 @@
 package shoboi
 
 import (
-	"encoding/json"
 	"math"
 	"net/http"
 	"strconv"
@@ -29,7 +28,7 @@ func GetAiringDate(animeID string, episodeNumber int) *AiringDate {
 		return nil
 	}
 
-	err = json.Unmarshal(resp.BodyBytes(), programList)
+	err = resp.Unmarshal(programList)
 
 	if err != nil {
 		return nil

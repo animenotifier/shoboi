@@ -1,7 +1,6 @@
 package shoboi
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
@@ -57,7 +56,7 @@ func SearchAnime(title string) (anime *AnimeSearchResult, err error) {
 		return nil, errors.New("Invalid status code: " + strconv.Itoa(resp.StatusCode()))
 	}
 
-	err = json.Unmarshal(resp.BodyBytes(), searchResult)
+	err = resp.Unmarshal(searchResult)
 
 	if err != nil {
 		return nil, err
