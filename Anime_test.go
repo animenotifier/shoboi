@@ -8,11 +8,11 @@ import (
 )
 
 func TestEpisodesWithTitles(t *testing.T) {
-	anime, err := GetAnime("1536")
+	anime, err := GetAnime("663")
 	assert.NoError(t, err)
 
 	episodes := anime.Episodes()
-	assert.Len(t, episodes, 7)
+	assert.Len(t, episodes, 24)
 
 	for _, episode := range episodes {
 		assert.NotZero(t, episode.Number)
@@ -21,9 +21,9 @@ func TestEpisodesWithTitles(t *testing.T) {
 		airingDate := episode.AiringDate
 
 		assert.NotEmpty(t, airingDate.Start)
-		assert.True(t, strings.HasPrefix(airingDate.Start, "2008") || strings.HasPrefix(airingDate.Start, "2009") || strings.HasPrefix(airingDate.Start, "2010"))
+		assert.True(t, strings.HasPrefix(airingDate.Start, "2006"))
 		assert.NotEmpty(t, airingDate.End)
-		assert.True(t, strings.HasPrefix(airingDate.End, "2008") || strings.HasPrefix(airingDate.End, "2009") || strings.HasPrefix(airingDate.End, "2010"))
+		assert.True(t, strings.HasPrefix(airingDate.End, "2006"))
 	}
 }
 
