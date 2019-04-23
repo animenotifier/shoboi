@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/aerogo/http/client"
-	"github.com/blitzprog/color"
+	"github.com/akyoto/color"
 )
 
 func get(url string) (resp client.Response, err error) {
