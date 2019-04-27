@@ -8,22 +8,22 @@ import (
 	"github.com/akyoto/color"
 )
 
-func get(url string) (resp client.Response, err error) {
+func get(url string) (response *client.Response, err error) {
 	const maxTries = 10
 
 	tryCount := 0
 	tryDelay := 5 * time.Second
 
 	for {
-		resp, err = client.Get(url).End()
+		response, err = client.Get(url).End()
 
-		if resp.StatusCode() == http.StatusOK {
+		if response.StatusCode() == http.StatusOK {
 			break
 		}
 
 		tryCount++
 
-		color.Red("Status code %d | Try #%d | %s", resp.StatusCode, tryCount, url)
+		color.Red("Status code %d | Try #%d | %s", response.StatusCode(), tryCount, url)
 
 		if tryCount > maxTries {
 			break
@@ -35,5 +35,5 @@ func get(url string) (resp client.Response, err error) {
 		tryDelay += tryDelay / 2
 	}
 
-	return resp, err
+	return response, err
 }
