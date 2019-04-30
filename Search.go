@@ -62,7 +62,7 @@ func SearchAnime(title string) (anime *AnimeSearchResult, err error) {
 		return nil, err
 	}
 
-	if searchResult == nil || searchResult.Titles == nil {
+	if searchResult.Titles == nil {
 		return nil, nil
 	}
 

@@ -52,7 +52,7 @@ func GetAnime(tid string) (*Anime, error) {
 		return nil, err
 	}
 
-	if titleFull == nil || titleFull.Titles == nil || titleFull.Titles[tid] == nil {
+	if titleFull.Titles == nil || titleFull.Titles[tid] == nil {
 		return nil, errors.New("Invalid data: Titles is nil")
 	}
 
